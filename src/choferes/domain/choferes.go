@@ -3,15 +3,17 @@ package domain
 type Chofer struct {
 	ID        int
 	Nombre    string
-	Apellido  string
+	Apellido_p string
+	Apellido_m string
 	Edad	  int
 }
 
-func NewChofer(id int, nombre string, apellido string, edad int) *Chofer {
+func NewChofer(id int, nombre string, apellido_p string, apellido_m string, edad int) *Chofer {
 	return &Chofer{
-		ID:       1,
+		ID:       id,
 		Nombre:   nombre,
-		Apellido: apellido,
+		Apellido_p: apellido_p,
+		Apellido_m: apellido_m,
 		Edad:     edad,
 	}
 }
@@ -30,11 +32,18 @@ func (c *Chofer) SetNombre(nombre string) {
 	c.Nombre = nombre
 }
 
-func (c *Chofer) GetApellido() string {
-	return c.Apellido
+func (c *Chofer) GetApellidoP() string {
+	return c.Apellido_p
 }
-func (c *Chofer) SetApellido(apellido string) {
-	c.Apellido = apellido
+func (c *Chofer) SetApellidoP(apellido_p string) {
+	c.Apellido_p = apellido_p
+}
+
+func (c *Chofer) GetApellidoM() string {
+	return c.Apellido_m
+}
+func (c *Chofer) SetApellidoM(apellido_m string) {
+	c.Apellido_m = apellido_m
 }
 
 func (c *Chofer) GetEdad() int {
