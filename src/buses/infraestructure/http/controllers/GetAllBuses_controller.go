@@ -18,7 +18,10 @@ func NewGetAllBusesController(uc *application.GetAllBusesUseCase) *GetAllBusesCo
 func (ctrl *GetAllBusesController) Run(c *gin.Context) {
 	buses, err := ctrl.uc.Run()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error":"Todos los campos son requeridos"})
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"error":"Todos los campos son requeridos",
+		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"buses": buses})

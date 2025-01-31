@@ -29,6 +29,17 @@ func (ctrl *AddBusController) Run(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{"message": "Bus agregado correctamente"})
+		c.JSON(http.StatusCreated, gin.H{
+			"status": true,
+			"data": gin.H{
+				"type": "Bus",
+				"idBus": buses.IdBus,
+				"attributes": gin.H{
+					"placa": buses.Placa,
+					"capacidad": buses.Capacidad,
+					"chofer": buses.ChoferID,
+				},
+			},
+		})
 	}
 }
