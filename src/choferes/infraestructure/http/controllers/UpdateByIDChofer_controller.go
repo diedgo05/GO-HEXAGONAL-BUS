@@ -32,7 +32,6 @@ func (ctrl *UpdateByIDChoferController) Run(c *gin.Context) {
 	}
 	if err := ctrl.uc.Run(id, chofer); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	} else {
+	} 
 		c.JSON(http.StatusOK, gin.H{"message": "Chofer actualizado correctamente"})
-	}
 }

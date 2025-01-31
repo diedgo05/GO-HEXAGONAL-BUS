@@ -1,15 +1,24 @@
 package main
 
 import (
-	"bus-project/src/choferes/infraestructure/dependencies"
-	"bus-project/src/choferes/infraestructure/http/routes"
+	dependenciesBus "bus-project/src/buses/infraestructure/dependenciesBus"
+	routesBus "bus-project/src/buses/infraestructure/http/routesBus"
+	choferDependencies "bus-project/src/choferes/infraestructure/dependencies"
+	choferRoutes "bus-project/src/choferes/infraestructure/http/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	dependencies.Init()
-	r := gin.Default()
-	routes.SetupRoutes(r)
-	r.Run()
+    r := gin.Default()
+
+    // Inicializar dependencias de choferes
+    choferDependencies.Init()
+    choferRoutes.SetupRoutes(r)
+
+    // Inicializar dependencias de buses
+	dependenciesBus.InitBus()
+    routesBus.Routes(r)
+
+    r.Run()
 }
