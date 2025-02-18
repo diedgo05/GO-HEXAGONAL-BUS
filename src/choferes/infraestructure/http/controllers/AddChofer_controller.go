@@ -29,6 +29,17 @@ func (ctrl *AddChoferController) Run(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{"message": "Chofer agregado correctamente"})
+		c.JSON(http.StatusCreated, gin.H{
+			"status": true,
+			"data": gin.H{
+				"type": "choferes",
+				"idChofer": choferes.ID,
+				"attributes": gin.H{
+					"nombre": choferes.Nombre,
+					"apellidos":choferes.Apellido_p + choferes.Apellido_m,
+					"edad":choferes.Edad,
+				},
+			},
+		})
 	}
 }

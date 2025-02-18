@@ -13,9 +13,11 @@ func SetupRoutes(router *gin.Engine) {
 	getAllChofer := dependencies.GetAllChoferesController()
 	updateChofer := dependencies.UpdateChoferController()
 	deleteChofer := dependencies.DeleteChoferController()
+	getChoferByID := dependencies.GetChoferByidController()
 
 	routes.POST("/", addChofer.Run)
 	routes.GET("/", getAllChofer.Run)
+	routes.GET("/:id", getChoferByID.Run)
 	routes.PUT("/:id", updateChofer.Run)
 	routes.DELETE("/:id", deleteChofer.Run)
 }

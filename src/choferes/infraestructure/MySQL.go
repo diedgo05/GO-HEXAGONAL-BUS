@@ -71,3 +71,25 @@ func (mysql *MySQL) DeleteByID(id int) error {
 	fmt.Println("Chofer eliminado correctamente")
 	return nil
 }
+
+func (mysql *MySQL) FindByID(id int) ([]domain.Chofer, error) {
+	query := "SELECT * FROM choferes WHERE id = ?"
+	rows, err := mysql.db.Query(query,id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	var choferes []domain.Chofer
+	for rows.Next() {
+		var chofer domain.Chofer
+		err := rows.Scan(&chofer.ID, &chofer.Nombre, &chofer.Apellido_p, &chofer.Apellido_m, &chofer.Edad)
+		if err != nil {
+			return nil, err
+		}
+		choferes = append(choferes, chofer)
+	}
+	fmt.Println("Chofer encontrado correctamente")
+	return choferes, nil
+}

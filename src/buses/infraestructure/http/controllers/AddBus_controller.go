@@ -32,7 +32,7 @@ func (ctrl *AddBusController) Run(c *gin.Context) {
 		c.JSON(http.StatusCreated, gin.H{
 			"status": true,
 			"data": gin.H{
-				"type": "Bus",
+				"type": "buses",
 				"idBus": buses.IdBus,
 				"attributes": gin.H{
 					"placa": buses.Placa,

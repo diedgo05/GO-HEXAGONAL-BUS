@@ -46,3 +46,9 @@ func DeleteChoferController() *controllers.DeleteByIDChoferController {
 
 	return controllers.NewDeleteByIDChoferController(ucDeleteChofer)
 }
+
+func GetChoferByidController() *controllers.GetChoferByIdController {
+	ucGetChoferByID := application.NewGetChoferByIDUseCase(&mySQL)
+
+	return controllers.NewGetChoferByIDController(ucGetChoferByID)
+}
