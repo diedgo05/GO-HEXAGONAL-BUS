@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bus-project/src/buses/application"
+	"bus-project/src/buses/application/services"
 	"bus-project/src/buses/domain"
 	"net/http"
 
@@ -10,10 +11,11 @@ import (
 
 type AddBusController struct {
 	uc *application.AddBusUseCase
+	event *services.Event
 }
 
-func NewAddBusController(uc *application.AddBusUseCase) *AddBusController {
-	return &AddBusController{uc: uc}
+func NewAddBusController(uc *application.AddBusUseCase, event *services.Event) *AddBusController {
+	return &AddBusController{uc: uc, event: event}
 }
 
 func (ctrl *AddBusController) Run(c *gin.Context) {
@@ -26,6 +28,10 @@ func (ctrl *AddBusController) Run(c *gin.Context) {
 
 	err := ctrl.uc.Run(buses)
 
+	if err == nil {
+		err = ctrl.event.Run(buses)
+	}
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
@@ -37,6 +43,7 @@ func (ctrl *AddBusController) Run(c *gin.Context) {
 				"attributes": gin.H{
 					"placa": buses.Placa,
 					"capacidad": buses.Capacidad,
+					"disponible": buses.Disponible,
 					"chofer": buses.ChoferID,
 				},
 			},

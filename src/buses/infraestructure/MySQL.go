@@ -15,8 +15,8 @@ func NewMySQL(db *sql.DB) *MySQL {
 }
 
 func (mysql *MySQL) Save(bus domain.Buses) error {
-	query := "INSERT INTO buses (idBus, placa, capacidad, choferID) VALUES (?, ?, ?, ?)"
-	_, err := mysql.db.Exec(query, bus.GetID(), bus.GetPlaca(), bus.GetCapacidad(), bus.GetChoferID())
+	query := "INSERT INTO buses ( placa, capacidad, disponible, choferID) VALUES (?, ?, ?, ?)"
+	_, err := mysql.db.Exec(query, bus.Placa, bus.Capacidad, bus.Disponible, bus.ChoferID)
 
 	if err != nil {
 		return err
@@ -27,7 +27,7 @@ func (mysql *MySQL) Save(bus domain.Buses) error {
 }
 
 func (mysql *MySQL) FindAllBuses() ([]domain.Buses, error) {
-	query := "SELECT idBus, placa, capacidad, choferID FROM buses"
+	query := "SELECT idBus, placa, capacidad, disponible, choferID FROM buses"
 	rows, err := mysql.db.Query(query)
 
 	if err != nil {
@@ -38,7 +38,7 @@ func (mysql *MySQL) FindAllBuses() ([]domain.Buses, error) {
 	var buses []domain.Buses
 	for rows.Next() {
 		var bus domain.Buses
-		err := rows.Scan(&bus.IdBus, &bus.Placa, &bus.Capacidad, &bus.ChoferID)
+		err := rows.Scan(&bus.IdBus, &bus.Placa, &bus.Capacidad,&bus.Disponible , &bus.ChoferID)
 		if err != nil {
 			return nil, err
 		}
@@ -72,7 +72,7 @@ func (mysql *MySQL) FindBusByIdChofer(choferID int) ([]domain.Buses, error) {
 
 func (mysql *MySQL) UpdateByID(idBus int, bus domain.Buses) error {
 	query := "UPDATE buses SET placa = ?, capacidad = ?, choferID = ? WHERE idBus = ?"
-	_, err := mysql.db.Exec(query, bus.GetPlaca(), bus.GetCapacidad(), bus.GetChoferID(), idBus)
+	_, err := mysql.db.Exec(query, bus.Placa, bus.Capacidad, bus.ChoferID, idBus)
 
 	if err != nil {
 		return err

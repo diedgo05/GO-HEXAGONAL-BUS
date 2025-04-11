@@ -2,13 +2,16 @@ package dependencies
 
 import (
 	"bus-project/src/buses/application"
+	"bus-project/src/buses/application/services"
 	"bus-project/src/buses/infraestructure"
+	"bus-project/src/buses/infraestructure/adapters"
 	"bus-project/src/buses/infraestructure/http/controllers"
 	"bus-project/src/core"
 )
 
 var (
 	mySQL infraestructure.MySQL
+	eventService *services.Event
 )
 
 func InitBus() {
@@ -17,12 +20,14 @@ func InitBus() {
 		return
 	}
 	mySQL = *infraestructure.NewMySQL(db)
+	rabbit := adapters.NewRabbit()
+	eventService = services.NewEvent(rabbit)
 }
 
 func AddBusController() *controllers.AddBusController {
 	ucAddBus := application.NewAddBusUseCase(&mySQL)
 
-	return controllers.NewAddBusController(ucAddBus)
+	return controllers.NewAddBusController(ucAddBus, eventService)
 }
 
 func GetAllBusesController() *controllers.GetAllBusesController {
