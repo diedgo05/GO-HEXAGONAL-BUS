@@ -14,16 +14,18 @@ func NewMySQL(db *sql.DB) *MySQL {
 	return &MySQL{db: db}
 }
 
-func (mysql *MySQL) Save(bus domain.Buses) error {
+func (mysql *MySQL) Save(bus domain.Buses) (int, error) {
 	query := "INSERT INTO buses ( placa, capacidad, disponible, choferID) VALUES (?, ?, ?, ?)"
-	_, err := mysql.db.Exec(query, bus.Placa, bus.Capacidad, bus.Disponible, bus.ChoferID)
+	result, err := mysql.db.Exec(query, bus.Placa, bus.Capacidad, bus.Disponible, bus.ChoferID)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
-
-	fmt.Println("Bus guardado correctamente")
-	return nil
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return int(id), nil
 }
 
 func (mysql *MySQL) FindAllBuses() ([]domain.Buses, error) {
@@ -71,8 +73,8 @@ func (mysql *MySQL) FindBusByIdChofer(choferID int) ([]domain.Buses, error) {
 }
 
 func (mysql *MySQL) UpdateByID(idBus int, bus domain.Buses) error {
-	query := "UPDATE buses SET placa = ?, capacidad = ?, choferID = ? WHERE idBus = ?"
-	_, err := mysql.db.Exec(query, bus.Placa, bus.Capacidad, bus.ChoferID, idBus)
+	query := "UPDATE buses SET  disponible =? WHERE idBus = ?"
+	_, err := mysql.db.Exec(query,  bus.Disponible, idBus)
 
 	if err != nil {
 		return err

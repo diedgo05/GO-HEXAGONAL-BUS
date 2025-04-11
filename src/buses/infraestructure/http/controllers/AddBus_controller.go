@@ -5,12 +5,11 @@ import (
 	"bus-project/src/buses/application/services"
 	"bus-project/src/buses/domain"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
 type AddBusController struct {
-	uc *application.AddBusUseCase
+	uc    *application.AddBusUseCase
 	event *services.Event
 }
 
@@ -26,27 +25,22 @@ func (ctrl *AddBusController) Run(c *gin.Context) {
 		return
 	}
 
-	err := ctrl.uc.Run(buses)
-
-	if err == nil {
-		err = ctrl.event.Run(buses)
-	}
-
+	// Obtener el ID generado por el caso de uso
+	id, err := ctrl.uc.Run(buses)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	} else {
-		c.JSON(http.StatusCreated, gin.H{
-			"status": true,
-			"data": gin.H{
-				"type": "buses",
-				"idBus": buses.IdBus,
-				"attributes": gin.H{
-					"placa": buses.Placa,
-					"capacidad": buses.Capacidad,
-					"disponible": buses.Disponible,
-					"chofer": buses.ChoferID,
-				},
-			},
-		})
+		return
 	}
+
+	// Actualizar el IdBus en el objeto buses
+	buses.IdBus = id
+
+	// Publicar el evento con el objeto actualizado
+	err = ctrl.event.Run(buses)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{buses.Placa: buses})
 }

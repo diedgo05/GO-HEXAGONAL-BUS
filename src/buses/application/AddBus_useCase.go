@@ -10,6 +10,10 @@ func NewAddBusUseCase(db domain.IBusesRepository) *AddBusUseCase {
 	return &AddBusUseCase{db: db}
 }
 
-func (uc *AddBusUseCase) Run(bus domain.Buses) error {
-	return uc.db.Save(bus)
-}
+func (uc *AddBusUseCase) Run(bus domain.Buses) (int, error) {
+	id, err := uc.db.Save(bus)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+	}
