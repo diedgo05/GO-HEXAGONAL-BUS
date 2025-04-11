@@ -7,7 +7,7 @@ import (
 )
 
 func Routes(router *gin.Engine) {
-	routes := router.Group(("/buses"))
+	routes := router.Group("/buses")
 
 	addBus := dependencies.AddBusController()
 	getAllBus := dependencies.GetAllBusesController()
